@@ -17,7 +17,24 @@ sudo dnf install -y \
     wl-clipboard swaync wlogout dunst \
     ghostty nemo \
     papirus-icon-theme bibata-cursor-themes gnome-themes-extra \
-    stow git
+    stow git sddm
+
+echo "==> Включаем SDDM..."
+sudo systemctl enable sddm
+sudo systemctl set-default graphical.target
+
+echo "==> Ставим тему для SDDM (sugar-candy)..."
+# Скачаем тему
+git clone https://github.com/MarianArlt/sddm-sugar-candy /tmp/sugar-candy
+sudo mkdir -p /usr/share/sddm/themes/
+sudo cp -r /tmp/sugar-candy /usr/share/sddm/themes/
+
+# Укажем тему в конфиге
+sudo mkdir -p /etc/sddm.conf.d
+cat <<EOF | sudo tee /etc/sddm.conf.d/theme.conf
+[Theme]
+Current=sugar-candy
+EOF
 
 echo "==> Бэкапим старые конфиги..."
 mkdir -p ~/.config.bak
